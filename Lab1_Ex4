@@ -1,0 +1,28 @@
+//Exercise4
+#include <stdio.h>
+
+void DecimalToBinary(int n){
+int bit[8];
+int i=0;
+while (n>0){
+    int r = n%2;
+    bit[i]=r;
+    n= n/2;
+    i++;
+}
+for (int j=i; j<8; j++)
+{
+    bit[j]=0;
+}
+
+for (int k=7; k>=0; k--)
+{
+    printf("%d",bit[k]);
+}
+}
+
+void main(){
+    int n;
+    scanf("%d", &n);
+    DecimalToBinary(n);
+}
