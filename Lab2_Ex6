@@ -1,0 +1,32 @@
+//Exercise 6
+#include <stdio.h>
+
+struct Distance{
+int inches;
+int feet;
+};
+
+struct Distance sum_distance(struct Distance d1, struct Distance d2)
+{
+    struct Distance total;
+    total.inches = d1.inches+d2.inches;
+    total.feet = d1.feet+ d2.feet;
+    while(total.inches>=12)
+    {
+        total.inches-=12;
+        total.feet+= 1;
+    }
+
+    return total;
+}
+
+void main()
+{
+    struct Distance d1,d2,sum;
+    d1.feet = 10;
+    d1.inches = 50;
+    d2.feet = 13;
+    d2.inches = 49;
+    sum = sum_distance(d1,d2);
+    printf("%d feet, %d inches", sum.feet, sum.inches);
+}
