@@ -1,0 +1,14 @@
+//Exercise1
+#include <stdio.h>
+void main() {
+int id, hours;
+float amount;
+printf("Enter your employee ID: ");
+scanf("%d", &id);
+printf("Enter no. of hours worked per month: ");
+scanf("%d", &hours);
+printf("Enter your hourly pay rate: ");
+scanf("%f", &amount);
+float salary = amount*hours;
+printf("ID: %d, Salary: $%.2f",id,salary);
+}
