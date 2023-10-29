@@ -1,0 +1,73 @@
+//Exercise 3
+
+#include <stdio.h>
+void main(){
+char s1[15];
+char s2[15];
+char common[15];
+char uncommon[15];
+printf("Enter a string: ");
+fgets(s1, sizeof(s1), stdin);
+//printf("You entered: %s", s1);
+printf("Enter another string: ");
+fgets(s2, sizeof(s2), stdin);
+//printf("You entered: %s", s2);
+
+int c=0, u=0;
+
+for (int i=0; i< sizeof(s1); i++){
+    int equal_check=0;
+    for (int j=0; j<sizeof(s2); j++)
+    {
+        if (s2[j]==s1[i])
+        {
+            common[c]=s1[i];
+            c++;
+            equal_check=1;
+            break;
+        }
+        else
+        //Checking if s2[j] is already present in common.
+        {
+            int in_common=0;
+            for (int k=0; k<sizeof(common);k++)
+        {
+            if(s2[j]==common[k])
+            {
+                in_common=1;
+                break;
+            }
+        }
+            if (in_common==0)
+            {
+                uncommon[u]=s2[j];
+                u++;
+            }
+        }
+        if (equal_check==0)
+        {
+        uncommon[u]=s1[i];
+        u++;
+        }
+    }
+
+}
+
+printf("The common characters are: ");
+for (int i=0; i<sizeof(common); i++)
+{
+if (common[i]!='\0')
+{
+    printf("%c ",common[i]);
+}
+}
+printf("The uncommon characters are: ");
+for (int i=0; i<sizeof(uncommon); i++)
+{
+    if (uncommon[i]!='\0')
+{
+    printf("%c ",uncommon[i]);
+}
+}
+
+}
