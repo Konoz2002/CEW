@@ -1,0 +1,330 @@
+
+//Exercise 1
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
+struct Contact {
+char name[50];
+char email[50];
+char number[50];
+};
+struct Contact* ptr;
+int n;
+
+void add_contact()
+{
+int m;
+printf("Enter the number of contacts to add: ");
+scanf("%d",&m);
+struct Contact* temp;
+//Copying the contents of ptr in a temporary variable.
+temp = (struct Contact*)malloc((n) * sizeof(struct Contact));
+for (int i = 0; i < n; i++){
+    strcpy(temp[i].name,ptr[i].name);
+    strcpy(temp[i].email,ptr[i].email);
+    strcpy(temp[i].number,ptr[i].number);
+}
+ptr = (struct Contact*)realloc(ptr, (n+m)*sizeof(struct Contact));
+
+//Copying the contents of ptr back into ptr after reallocation.
+for (int i = 0; i < n; i++){
+    strcpy(ptr[i].name,temp[i].name);
+    strcpy(ptr[i].email,temp[i].email);
+    strcpy(ptr[i].number,temp[i].number);
+}
+free(temp);
+
+for (int i = n; i < n+m; i++){
+    printf("Enter contact's name: ");
+    scanf("%s",ptr[i].name);
+    printf("Enter contact's email: ");
+    scanf("%s",ptr[i].email);
+    printf("Enter contact's number: ");
+    scanf("%s",ptr[i].number);
+}
+n=n+m;
+}
+
+
+
+void delete_contact()
+{
+int m;
+printf("\nEnter the index number of the contact to be deleted: ");
+scanf("%d",&m);
+struct Contact* temp;
+temp = (struct Contact*)malloc((n-1) * sizeof(struct Contact));
+int j=0;
+for (int i = 0; i < n; i++){
+if (i==m)
+{
+    continue;
+}
+else
+{
+    strcpy(temp[j].name,ptr[i].name);
+    strcpy(temp[j].email,ptr[i].email);
+    strcpy(temp[j].number,ptr[i].number);
+    j++;
+}
+}
+free(ptr);
+ptr=temp;
+n=n-1;
+}
+
+void display_contacts(struct Contact* ptr)
+    {
+    printf("The details of the contacts are:\n");
+    for (int i = 0; i < n; i++) {
+    int k = i+1;
+    printf("\nContact %d:\n",k);
+    printf("\nName: %s\n",ptr[i].name);
+    printf("Email: %s\n",ptr[i].email);
+    printf("Number: %s\n",ptr[i].number);
+        }
+    }
+
+void main(){
+printf("Enter number of contacts: ");
+scanf("%d",&n);
+printf("Number of contacts entered: %d\n", n);
+ptr = (struct Contact*)malloc(n * sizeof(struct Contact));
+if (ptr == NULL)
+{
+printf("Memory not allocated.\n");
+}
+else
+{
+printf("Memory successfully allocated.\n");
+
+for (int i = 0; i < n; i++){
+    printf("Enter contact's name: ");
+    scanf("%s",ptr[i].name);
+    printf("Enter contact's email: ");
+    scanf("%s",ptr[i].email);
+    printf("Enter contact's number: ");
+    scanf("%s",ptr[i].number);
+}
+display_contacts(ptr);
+}
+printf("\nPress 1 to add more contacts.");
+printf("\nPress 2 to delete a contact.\n");
+int choice;
+scanf("%d",&choice);
+
+if (choice==1)
+{add_contact();}
+
+if (choice==2)
+{delete_contact();}
+
+display_contacts(ptr);
+}
+
+
+
+
+//Exercises 3, 4 & 5
+#include <stdio.h>
+#include <stdlib.h>
+
+// Define a structure for a node in the singly linked list
+struct Node {
+    int data;
+    struct Node* next;
+};
+
+// Function to create a new node
+struct Node* createNode(int value) {
+    struct Node* newNode = (struct Node*)malloc(sizeof(struct Node));
+    if (newNode == NULL) {
+        printf("Memory allocation failed.\n");
+        exit(1);
+    }
+    newNode->data = value;
+    newNode->next = NULL;
+    return newNode;
+}
+
+// Function to insert a new node at the end of the linked list
+void insertAtEnd(struct Node** head, int value) {
+    struct Node* newNode = createNode(value);
+    if (*head == NULL) {
+        *head = newNode;
+    } else {
+        struct Node* temp = *head;
+        while (temp->next != NULL) {
+            temp = temp->next;
+        }
+        temp->next = newNode;
+    }
+}
+
+//Exercise3
+// Function to convert the linked list to an array and return it
+int* convertLinkedListToArray(struct Node* head, int* arraySize) {
+    if (head == NULL) {
+        *arraySize = 0;
+        return NULL;
+    }
+
+    int count = 0;
+    struct Node* temp = head;
+
+    // Count the number of nodes in the linked list
+    while (temp != NULL) {
+        count++;
+        temp = temp->next;
+    }
+
+    *arraySize = count;
+    int* arr = (int*)malloc(count * sizeof(int));
+    if (arr == NULL) {
+        printf("Memory allocation failed.\n");
+        exit(1);
+    }
+
+    temp = head;
+    int index = 0;
+
+    // Traverse the linked list and store data in the array
+    while (temp != NULL) {
+        arr[index++] = temp->data;
+        temp = temp->next;
+    }
+
+    return arr;
+}
+
+// Function to display the array
+void displayArray(int* arr, int size) {
+    printf("Converted Array: ");
+    for (int i = 0; i < size; i++) {
+        printf("%d ", arr[i]);
+    }
+    printf("\n");
+}
+
+// Function to free memory allocated for the linked list and array
+void freeMemory(struct Node* head, int* arr) {
+    struct Node* temp;
+    while (head != NULL) {
+        temp = head;
+        head = head->next;
+        free(temp);
+    }
+    free(arr);
+}
+//Exercise2
+// Function to merge two sorted linked lists
+struct Node* mergeSortedLists(struct Node* list1, struct Node* list2) {
+    struct Node* mergedList = NULL;
+
+    if (list1 == NULL) {
+        return list2;
+    } else if (list2 == NULL) {
+        return list1;
+    }
+
+    if (list1->data <= list2->data) {
+        mergedList = list1;
+        mergedList->next = mergeSortedLists(list1->next, list2);
+    } else {
+        mergedList = list2;
+        mergedList->next = mergeSortedLists(list1, list2->next);
+    }
+
+    return mergedList;
+}
+
+
+// Function to display the merged linked list
+void displayList(struct Node* head) {
+    struct Node* temp = head;
+    while (temp != NULL) {
+        printf("%d ", temp->data);
+        temp = temp->next;
+    }
+    printf("\n");
+}
+
+//Exercise4
+// Function to remove elements with odd indices from a linked list
+void removeOddIndexedNodes(struct Node** head) {
+    if (*head == NULL) {
+        printf("List is empty.\n");
+        return;
+    }
+
+    struct Node* current = *head;
+    struct Node* prev = NULL;
+    int index = 0;
+
+    while (current != NULL) {
+        if (index % 2 != 0) { // Remove nodes with odd indices
+            if (prev != NULL) {
+                prev->next = current->next;
+                free(current);
+                current = prev->next;
+            } else {
+                *head = current->next;
+                free(current);
+                current = *head;
+            }
+        } else {
+            prev = current;
+            current = current->next;
+        }
+        index++;
+    }
+}
+
+
+int main() {
+    struct Node* head = NULL;
+
+    // Insert elements into the linked list
+    insertAtEnd(&head, 11);
+    insertAtEnd(&head, 22);
+    insertAtEnd(&head, 33);
+    insertAtEnd(&head, 44);
+    insertAtEnd(&head, 55);
+
+    int arraySize;
+    int* arr = convertLinkedListToArray(head, &arraySize);
+
+    if (arr != NULL) {
+        displayArray(arr, arraySize);
+        freeMemory(head, arr);
+    } else {
+        printf("Linked list is empty.\n");
+    }
+
+    struct Node* list1 = NULL;
+    insertAtEnd(&list1, 1);
+    insertAtEnd(&list1, 2);
+    insertAtEnd(&list1, 3);
+    insertAtEnd(&list1, 4);
+    insertAtEnd(&list1, 5);
+
+    struct Node* list2 = NULL;
+    insertAtEnd(&list2, 6);
+    insertAtEnd(&list2, 7);
+    insertAtEnd(&list2, 8);
+    insertAtEnd(&list2, 9);
+    insertAtEnd(&list2, 10);
+
+    // Merge the two sorted linked lists
+    struct Node* mergedList = mergeSortedLists(list1, list2);
+
+    printf("Merged sorted list: ");
+    displayList(mergedList);
+
+    removeOddIndexedNodes(head);
+     displayList(head);
+
+    return 0;
+}
+
