@@ -1,0 +1,190 @@
+//Exercise 1
+
+#include <stdio.h>
+void main()
+{
+FILE *fptr;
+fptr=NULL;
+char mystring[40];
+fptr = fopen("C:\\Users\\konoz\\Desktop\\Testing.txt","w");
+printf("Enter some text: ");
+gets(mystring);
+
+//Writing to a file.
+fprintf(fptr,"%s",mystring);
+fclose(fptr);
+
+//Appending to a file.
+fptr = fopen("C:\\Users\\konoz\\Desktop\\Testing.txt","a");
+printf("Add some more text to the file: ");
+gets(mystring);
+fprintf(fptr,"%s",mystring);
+fclose(fptr);
+
+//Reading a file.
+fptr = fopen("C:\\Users\\konoz\\Desktop\\Testing.txt","r");
+char readfile[40];
+printf("Reading text from the file:\n");
+fgets(readfile,sizeof(readfile),fptr);
+printf("%s",readfile);
+fclose(fptr);
+}
+
+//Exercise 2
+
+#include <stdio.h>
+void main()
+{
+FILE *fptr;
+fptr=NULL;
+int inWord = 0; // Flag to track if currently in a word.
+char mystring[50];
+int c;
+int wordCount=0;
+
+fptr = fopen("C:\\Users\\konoz\\Desktop\\Testing.txt","w");
+printf("Enter some text: ");
+gets(mystring);
+
+//Writing to a file.
+fprintf(fptr,"%s",mystring);
+fclose(fptr);
+
+//Reading a file.
+fptr = fopen("C:\\Users\\konoz\\Desktop\\Testing.txt","r");
+char readfile[40];
+
+while((c=fgetc(fptr))!=EOF)
+{
+    // Check if the character is an alphabet or an apostrophe (considered part of a word)
+        if (c == ' ' || c == '\n') {
+               wordCount++; // Increment word count when leaving a word.
+            }
+        }
+wordCount++;
+
+printf("Number of words: %d",wordCount);
+fclose(fptr);
+}
+
+//Exercise 3
+
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
+const int MAX_STUDENTS=100;
+const int MAX_NAME_LENGTH=50;
+const char FILENAME[] = "C:\\Users\\konoz\\Desktop\\Students.txt";
+
+struct Student {
+    int rollNumber;
+    char name[50];
+    int age;
+    float marks;
+};
+
+void addStudent(struct Student students[], int* totalStudents){
+if (*totalStudents >= MAX_STUDENTS) {
+        printf("Database is full. Cannot add more students.\n");
+        return;
+    }
+
+    struct Student newStudent;
+
+    printf("Enter roll number: ");
+    scanf("%d", &newStudent.rollNumber);
+    printf("Enter name: ");
+    scanf("%s", &newStudent.name);
+    printf("Enter age: ");
+    scanf("%d", &newStudent.age);
+    printf("Enter marks: ");
+    scanf("%f", &newStudent.marks);
+
+    students[*totalStudents]=newStudent;
+    (*totalStudents)++;
+    printf("Student added successfully!\n");
+}
+
+void displayStudents(struct Student students[], int totalStudents) {
+if (totalStudents == 0) {
+        printf("No students in the database.\n");
+        return;
+    }
+    printf("Student Records:\n");
+    printf("Roll Number\tName\tAge\tMarks\n");
+
+    for (int i=0; i<totalStudents; i++)
+    {
+        printf("%d\t%s\t%d\t%d\n",students[i].rollNumber,students[i].name,students[i].age,students[i].marks);
+    }
+}
+
+void saveToFile(struct Student students[], int totalStudents) {
+    FILE *file = fopen(FILENAME, "w");
+    if (file == NULL) {
+        printf("Error opening file.\n");
+        return;
+    }
+
+    for (int i = 0; i < totalStudents; i++) {
+        fprintf(file, "%d %s %d %.2f\n", students[i].rollNumber, students[i].name, students[i].age, students[i].marks);
+    }
+
+    fclose(file);
+    printf("Records saved to file.\n");
+}
+
+//The function below is called to increment the *totalStudents up until the last student is counted.
+void loadFromFile(struct Student students[], int *totalStudents) {
+    FILE *file = fopen(FILENAME, "r");
+    if (file == NULL) {
+        printf("Error opening file.\n");
+        return;
+    }
+
+    while (fscanf(file, "%d %s %d %f", &students[*totalStudents].rollNumber, students[*totalStudents].name,
+                  &students[*totalStudents].age, &students[*totalStudents].marks) == 4) {
+        (*totalStudents)++;
+    }
+
+    fclose(file);
+    printf("Records loaded from file.\n");
+}
+
+int main() {
+    struct Student students[MAX_STUDENTS];
+    int totalStudents = 0;
+
+    loadFromFile(students, &totalStudents);
+
+    int choice;
+    do {
+        printf("\nStudent Database Menu:\n");
+        printf("1. Add Student\n");
+        printf("2. Display Students\n");
+        printf("3. Save to File\n");
+        printf("4. Exit\n");
+        printf("Enter your choice: ");
+        scanf("%d", &choice);
+
+        switch (choice) {
+            case 1:
+                addStudent(students, &totalStudents);
+                break;
+            case 2:
+                displayStudents(students, totalStudents);
+                break;
+            case 3:
+                saveToFile(students, totalStudents);
+                break;
+            case 4:
+                printf("Exiting the program.\n");
+                break;
+            default:
+                printf("Invalid choice. Please enter a valid option.\n");
+        }
+    } while (choice != 4);
+
+    return 0;
+}
