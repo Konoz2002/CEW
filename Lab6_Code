@@ -1,0 +1,91 @@
+//Exercise1
+#include <stdio.h>
+#include "fileio.h"
+
+int main() {
+    const char *fileName = "example.txt";
+    const char *text = "This is a test text.\n";
+
+    // Write text to file
+    if (writeToFile(fileName, text)) {
+        // Check if the file exists
+        if (fileExists(fileName)) {
+            // Read text from file
+            readFromFile(fileName);
+        } else {
+            printf("File '%s' does not exist.\n", fileName);
+        }
+    }
+
+    return 0;
+}
+
+//Exercise2
+#include <stdio.h>
+#include "linked_list.h"
+
+int main() {
+    struct Node* head = NULL;
+
+    // Insert elements into the linked list
+    head = insertAtEnd(head, 10);
+    head = insertAtEnd(head, 20);
+    head = insertAtEnd(head, 30);
+    head = insertAtBeginning(head, 5);
+
+    // Display the linked list
+    displayList(head);
+
+    // Delete the linked list
+    deleteList(head);
+
+    return 0;
+}
+
+//Exercise3
+#include <stdio.h>
+#include "matrix_operations.h"
+
+int main() {
+    // Example matrices
+    int rows1 = 2, cols1 = 2;
+    int **matrix1 = (int **)malloc(rows1 * sizeof(int *));
+    for (int i = 0; i < rows1; i++) {
+        matrix1[i] = (int *)malloc(cols1 * sizeof(int));
+    }
+
+    int rows2 = 2, cols2 = 2;
+    int **matrix2 = (int **)malloc(rows2 * sizeof(int *));
+    for (int i = 0; i < rows2; i++) {
+        matrix2[i] = (int *)malloc(cols2 * sizeof(int));
+    }
+
+    // Assign values to matrix1 and matrix2 (for demonstration purposes)
+    matrix1[0][0] = 1; matrix1[0][1] = 2;
+    matrix1[1][0] = 3; matrix1[1][1] = 4;
+
+    matrix2[0][0] = 5; matrix2[0][1] = 6;
+    matrix2[1][0] = 7; matrix2[1][1] = 8;
+
+    // Perform matrix operations and display results
+    int **resultAddition = (int **)malloc(rows1 * sizeof(int *));
+    for (int i = 0; i < rows1; i++) {
+        resultAddition[i] = (int *)malloc(cols1 * sizeof(int));
+    }
+
+    matrixAddition(matrix1, matrix2, resultAddition, rows1, cols1);
+    printf("Matrix Addition:\n");
+    displayMatrix(resultAddition, rows1, cols1);
+
+    // Free allocated memory for matrices and results
+    for (int i = 0; i < rows1; i++) {
+        free(matrix1[i]);
+        free(matrix2[i]);
+        free(resultAddition[i]);
+    }
+    free(matrix1);
+    free(matrix2);
+    free(resultAddition);
+
+    return 0;
+}
